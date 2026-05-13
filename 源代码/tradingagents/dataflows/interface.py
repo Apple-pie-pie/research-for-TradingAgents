@@ -23,6 +23,7 @@ from .alpha_vantage import (
     get_global_news as get_alpha_vantage_global_news,
 )
 from .alpha_vantage_common import AlphaVantageRateLimitError
+from yfinance.exceptions import YFRateLimitError
 
 # Configuration and routing logic
 from .config import get_config
@@ -136,6 +137,7 @@ def route_to_vendor(method: str, *args, **kwargs):
     category = get_category_for_method(method)
     vendor_config = get_vendor(category, method)
     primary_vendors = [v.strip() for v in vendor_config.split(',')]
+    last_error = None
 
     if method not in VENDOR_METHODS:
         raise ValueError(f"Method '{method}' not supported")
@@ -156,7 +158,10 @@ def route_to_vendor(method: str, *args, **kwargs):
 
         try:
             return impl_func(*args, **kwargs)
-        except AlphaVantageRateLimitError:
-            continue  # Only rate limits trigger fallback
+        except (AlphaVantageRateLimitError, YFRateLimitError) as exc:
+            last_error = exc
+            continue
 
+    if last_error is not None:
+        raise RuntimeError(f"No available vendor for '{method}' after vendor fallback") from last_error
     raise RuntimeError(f"No available vendor for '{method}'")

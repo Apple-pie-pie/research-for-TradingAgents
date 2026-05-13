@@ -19,6 +19,22 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_BENCHMARK_TICKER":     "benchmark_ticker",
 }
 
+_NESTED_ENV_OVERRIDES = {
+    "TRADINGAGENTS_CORE_STOCK_VENDOR": ("data_vendors", "core_stock_apis"),
+    "TRADINGAGENTS_TECHNICAL_INDICATORS_VENDOR": ("data_vendors", "technical_indicators"),
+    "TRADINGAGENTS_FUNDAMENTAL_DATA_VENDOR": ("data_vendors", "fundamental_data"),
+    "TRADINGAGENTS_NEWS_DATA_VENDOR": ("data_vendors", "news_data"),
+    "TRADINGAGENTS_GET_STOCK_DATA_VENDOR": ("tool_vendors", "get_stock_data"),
+    "TRADINGAGENTS_GET_INDICATORS_VENDOR": ("tool_vendors", "get_indicators"),
+    "TRADINGAGENTS_GET_FUNDAMENTALS_VENDOR": ("tool_vendors", "get_fundamentals"),
+    "TRADINGAGENTS_GET_BALANCE_SHEET_VENDOR": ("tool_vendors", "get_balance_sheet"),
+    "TRADINGAGENTS_GET_CASHFLOW_VENDOR": ("tool_vendors", "get_cashflow"),
+    "TRADINGAGENTS_GET_INCOME_STATEMENT_VENDOR": ("tool_vendors", "get_income_statement"),
+    "TRADINGAGENTS_GET_NEWS_VENDOR": ("tool_vendors", "get_news"),
+    "TRADINGAGENTS_GET_GLOBAL_NEWS_VENDOR": ("tool_vendors", "get_global_news"),
+    "TRADINGAGENTS_GET_INSIDER_TRANSACTIONS_VENDOR": ("tool_vendors", "get_insider_transactions"),
+}
+
 
 def _coerce(value: str, reference):
     """Coerce env-var string to the type of the existing default value."""
@@ -38,6 +54,13 @@ def _apply_env_overrides(config: dict) -> dict:
         if raw is None or raw == "":
             continue
         config[key] = _coerce(raw, config.get(key))
+
+    for env_var, (parent_key, child_key) in _NESTED_ENV_OVERRIDES.items():
+        raw = os.environ.get(env_var)
+        if raw is None or raw == "":
+            continue
+        config.setdefault(parent_key, {})[child_key] = raw.strip()
+
     return config
 
 

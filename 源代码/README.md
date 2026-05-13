@@ -105,6 +105,7 @@ Top-level repository layout after the workspace reorganization:
 
 ```text
 TradingAgents/
+├─ 部署/    # general deployment guide and runtime notes
 ├─ 源代码/  # all runnable source, config, tests, docs, and assets
 └─ 学习/    # notes, exercises, and learning materials
 ```
@@ -178,6 +179,16 @@ Alternatively, copy `.env.example` to `.env` and fill in your keys:
 cp .env.example .env
 ```
 
+If Yahoo Finance is rate limited in your environment, you can redirect stock-price requests to Alpha Vantage from `.env` without editing Python code:
+
+```env
+ALPHA_VANTAGE_API_KEY=your_key
+TRADINGAGENTS_CORE_STOCK_VENDOR=alpha_vantage,yfinance
+TRADINGAGENTS_GET_STOCK_DATA_VENDOR=alpha_vantage,yfinance
+```
+
+The router will now also fall back to the next configured vendor when yfinance raises a rate-limit error.
+
 ### CLI Usage
 
 Launch the interactive CLI:
@@ -186,6 +197,8 @@ tradingagents          # installed command
 python -m cli.main     # alternative: run directly from source
 ```
 You will see a screen where you can select your desired tickers, analysis date, LLM provider, research depth, and more.
+
+On Windows, the CLI now copies certifi's CA bundle to an ASCII-only path under LOCALAPPDATA and exports SSL_CERT_FILE, REQUESTS_CA_BUNDLE, and CURL_CA_BUNDLE automatically at startup. This avoids yfinance or curl_cffi SSL failures when the virtual environment lives under a non-ASCII path such as 部署.
 
 <p align="center">
   <img src="assets/cli/cli_init.png" width="100%" style="display: inline-block; margin: 0 2%;">

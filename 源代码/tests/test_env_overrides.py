@@ -96,3 +96,15 @@ def test_unknown_env_var_is_ignored(monkeypatch):
         TRADINGAGENTS_NONEXISTENT_KEY="oops",
     )
     assert "nonexistent_key" not in dc.DEFAULT_CONFIG
+
+
+def test_nested_vendor_overrides(monkeypatch):
+    dc = _reload_with_env(
+        monkeypatch,
+        TRADINGAGENTS_CORE_STOCK_VENDOR="alpha_vantage,yfinance",
+        TRADINGAGENTS_GET_STOCK_DATA_VENDOR="alpha_vantage",
+        TRADINGAGENTS_GET_NEWS_VENDOR="alpha_vantage,yfinance",
+    )
+    assert dc.DEFAULT_CONFIG["data_vendors"]["core_stock_apis"] == "alpha_vantage,yfinance"
+    assert dc.DEFAULT_CONFIG["tool_vendors"]["get_stock_data"] == "alpha_vantage"
+    assert dc.DEFAULT_CONFIG["tool_vendors"]["get_news"] == "alpha_vantage,yfinance"

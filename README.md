@@ -58,6 +58,7 @@
 ```text
 research-for-TradingAgents/
 ├─ README.md                # 当前这份总览文档
+├─ 部署/                    # 通用部署说明、安装与运行文档
 ├─ 学习/                    # 学习笔记、结构讲解、阅读理解
 └─ 源代码/                  # 可运行源代码、测试、CLI、资源文件
 ```
@@ -65,6 +66,8 @@ research-for-TradingAgents/
 ### 快速入口
 
 - 源代码英文原始 README：[源代码/README.md](源代码/README.md)
+- 通用部署文档：[部署/TradingAgents-通用部署指南.md](部署/TradingAgents-通用部署指南.md)
+- 部署目录 Docker 入口：[部署/docker-compose.yml](部署/docker-compose.yml)
 - 程序入口示例：[源代码/main.py](源代码/main.py)
 - CLI 入口：[源代码/cli/main.py](源代码/cli/main.py)
 - 默认配置：[源代码/tradingagents/default_config.py](源代码/tradingagents/default_config.py)
@@ -200,6 +203,31 @@ TradingAgents 是一个多智能体金融交易研究框架。它通过多个角
 ## 运行方式
 
 以下命令默认在 [源代码](源代码) 目录内执行。
+
+如果你希望直接从部署目录启动 Docker 版通用环境，也可以执行：
+
+```powershell
+Set-Location .\部署
+Copy-Item .env.example .env
+docker compose run --rm tradingagents
+```
+
+这套入口会自动使用 [部署/docker-compose.yml](部署/docker-compose.yml) 指向 [源代码](源代码) 作为构建上下文，并把运行数据保存在 部署/data 目录下。
+
+如果这台机器没有 Docker，也可以直接在部署目录执行本地脚本：
+
+```powershell
+Set-Location .\部署
+.\run-local.cmd --install
+```
+
+脚本会在部署目录创建 .venv，从 [源代码](源代码) 安装项目，并默认读取 [部署/.env.example](部署/.env.example) 复制出的 .env。
+
+当前部署模板默认使用 DeepSeek，预设模型为 deepseek-v4-pro 和 deepseek-v4-flash。实际运行前只需要把部署目录 .env 里的 DEEPSEEK_API_KEY 填上即可。
+
+本地运行的日志、缓存和记忆文件也已经默认重定向到 部署/data/tradingagents，下次排查运行结果时直接看这个目录即可。
+
+部署目录下的本地启动脚本还会自动准备一份 ASCII 路径的 CA 证书文件，用来规避 Windows 中文路径环境里 yfinance / curl_cffi 的 SSL 证书错误。
 
 ### 环境安装
 

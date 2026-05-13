@@ -1,5 +1,7 @@
 import warnings
 
+from tradingagents.runtime_env import configure_ca_bundle
+
 # Load .env files at package import so DEFAULT_CONFIG's env-var overlay
 # (and every llm_clients consumer) sees the user's keys regardless of
 # which entry point started the process. find_dotenv(usecwd=True) walks
@@ -14,6 +16,8 @@ try:
     load_dotenv(find_dotenv(".env.enterprise", usecwd=True), override=False)
 except ImportError:
     pass
+
+configure_ca_bundle()
 
 # langchain-core 1.3.3 calls surface_langchain_deprecation_warnings() in
 # its own __init__, which prepends default-action filters for its
