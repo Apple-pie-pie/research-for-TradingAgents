@@ -109,6 +109,12 @@ TradingAgents/
 └─ 学习/    # notes, exercises, and learning materials
 ```
 
+Learning materials created in this workspace:
+
+- [../学习/2026-05-13-00-01-55-第一轮学习-程序逻辑讲解.md](../学习/2026-05-13-00-01-55-第一轮学习-程序逻辑讲解.md)
+- [../学习/2026-05-13-00-07-24-第二轮学习-多个Agents的功能与系统核心能力.md](../学习/2026-05-13-00-07-24-第二轮学习-多个Agents的功能与系统核心能力.md)
+- [../学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md](../学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md)
+
 All commands below assume your current working directory is `源代码/`.
 
 ### Installation
