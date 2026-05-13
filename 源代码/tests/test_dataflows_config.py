@@ -8,6 +8,7 @@ import pytest
 from yfinance.exceptions import YFRateLimitError
 
 import tradingagents.default_config as default_config
+from tradingagents.dataflows.alpha_vantage_stock import get_stock as get_alpha_vantage_stock_data
 from tradingagents.dataflows.config import get_config, set_config
 from tradingagents.dataflows.interface import route_to_vendor
 
@@ -100,4 +101,15 @@ class DataflowsConfigIsolationTests(unittest.TestCase):
             finally:
                 interface_module.VENDOR_METHODS["get_stock_data"] = original_methods
 
+        self.assertIn("timestamp,open", result)
+
+    def test_alpha_vantage_stock_uses_free_daily_endpoint(self):
+        with patch(
+            "tradingagents.dataflows.alpha_vantage_stock._make_api_request",
+            return_value="timestamp,open\n2026-05-13,1.0\n",
+        ) as request_mock:
+            result = get_alpha_vantage_stock_data("TSLA", "2026-05-01", "2026-05-13")
+
+        request_mock.assert_called_once()
+        self.assertEqual(request_mock.call_args.args[0], "TIME_SERIES_DAILY")
         self.assertIn("timestamp,open", result)

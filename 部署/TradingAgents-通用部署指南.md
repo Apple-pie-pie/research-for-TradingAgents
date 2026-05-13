@@ -260,6 +260,7 @@ TRADINGAGENTS_GET_STOCK_DATA_VENDOR=alpha_vantage,yfinance
 ```
 
 当前代码在 yfinance 返回限流错误时，也会自动继续尝试你配置的下一个 vendor，而不是直接让整条分析链路失败。
+股票价格回退当前使用的是 Alpha Vantage 免费可用的 TIME_SERIES_DAILY 端点，不再依赖 adjusted daily 的 premium 接口，因此免费 key 也可以承担基础日线 OHLCV 获取。
 
 ### 5.4 企业模型与本地模型
 

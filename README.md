@@ -73,7 +73,9 @@ research-for-TradingAgents/
 - 默认配置：[源代码/tradingagents/default_config.py](源代码/tradingagents/default_config.py)
 - 核心图编排：[源代码/tradingagents/graph/trading_graph.py](源代码/tradingagents/graph/trading_graph.py)
 - 工作流搭建：[源代码/tradingagents/graph/setup.py](源代码/tradingagents/graph/setup.py)
-- 新学习文档：[学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md](学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md)
+- 学习文档：[学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md](学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md)
+- 学习文档：[学习/2026-05-13-02-10-00-第四轮学习-Alpha与Yahoo接口作用分析及扩展要求.md](学习/2026-05-13-02-10-00-第四轮学习-Alpha与Yahoo接口作用分析及扩展要求.md)
+- 学习文档：[学习/2026-05-13-02-40-00-第五轮学习-Tushare在项目中的落地分析.md](学习/2026-05-13-02-40-00-第五轮学习-Tushare在项目中的落地分析.md)
 
 ---
 

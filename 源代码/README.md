@@ -115,6 +115,8 @@ Learning materials created in this workspace:
 - [../学习/2026-05-13-00-01-55-第一轮学习-程序逻辑讲解.md](../学习/2026-05-13-00-01-55-第一轮学习-程序逻辑讲解.md)
 - [../学习/2026-05-13-00-07-24-第二轮学习-多个Agents的功能与系统核心能力.md](../学习/2026-05-13-00-07-24-第二轮学习-多个Agents的功能与系统核心能力.md)
 - [../学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md](../学习/2026-05-13-01-10-00-第三轮学习-运行周期回测与A股适配.md)
+- [../学习/2026-05-13-02-10-00-第四轮学习-Alpha与Yahoo接口作用分析及扩展要求.md](../学习/2026-05-13-02-10-00-第四轮学习-Alpha与Yahoo接口作用分析及扩展要求.md)
+- [../学习/2026-05-13-02-40-00-第五轮学习-Tushare在项目中的落地分析.md](../学习/2026-05-13-02-40-00-第五轮学习-Tushare在项目中的落地分析.md)
 
 All commands below assume your current working directory is `源代码/`.
 
@@ -188,6 +190,7 @@ TRADINGAGENTS_GET_STOCK_DATA_VENDOR=alpha_vantage,yfinance
 ```
 
 The router will now also fall back to the next configured vendor when yfinance raises a rate-limit error.
+The stock-price fallback uses Alpha Vantage's free `TIME_SERIES_DAILY` endpoint, so free API keys can handle the basic OHLCV path without requiring the premium adjusted-daily API.
 
 ### CLI Usage
 
