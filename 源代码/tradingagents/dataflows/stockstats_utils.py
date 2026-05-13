@@ -12,9 +12,12 @@ from .utils import safe_ticker_component
 
 logger = logging.getLogger(__name__)
 
+YF_RETRY_LIMIT = 100
+YF_RETRY_DELAY_SECONDS = 1.0
 
-def yf_retry(func, max_retries=3, base_delay=2.0):
-    """Execute a yfinance call with exponential backoff on rate limits.
+
+def yf_retry(func, max_retries=YF_RETRY_LIMIT, delay_seconds=YF_RETRY_DELAY_SECONDS):
+    """Execute a yfinance call with fixed-delay retries on rate limits.
 
     yfinance raises YFRateLimitError on HTTP 429 responses but does not
     retry them internally. This wrapper adds retry logic specifically
@@ -25,9 +28,13 @@ def yf_retry(func, max_retries=3, base_delay=2.0):
             return func()
         except YFRateLimitError:
             if attempt < max_retries:
-                delay = base_delay * (2 ** attempt)
-                logger.warning(f"Yahoo Finance rate limited, retrying in {delay:.0f}s (attempt {attempt + 1}/{max_retries})")
-                time.sleep(delay)
+                logger.warning(
+                    "Yahoo Finance rate limited, retrying in %.0fs (attempt %s/%s)",
+                    delay_seconds,
+                    attempt + 1,
+                    max_retries,
+                )
+                time.sleep(delay_seconds)
             else:
                 raise
 

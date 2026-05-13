@@ -2,6 +2,7 @@
 
 import copy
 import unittest
+from unittest.mock import call
 from unittest.mock import patch
 
 import pytest
@@ -11,6 +12,7 @@ import tradingagents.default_config as default_config
 from tradingagents.dataflows.alpha_vantage_stock import get_stock as get_alpha_vantage_stock_data
 from tradingagents.dataflows.config import get_config, set_config
 from tradingagents.dataflows.interface import route_to_vendor
+from tradingagents.dataflows.stockstats_utils import yf_retry
 
 
 @pytest.mark.unit
@@ -113,3 +115,18 @@ class DataflowsConfigIsolationTests(unittest.TestCase):
         request_mock.assert_called_once()
         self.assertEqual(request_mock.call_args.args[0], "TIME_SERIES_DAILY")
         self.assertIn("timestamp,open", result)
+
+    def test_yf_retry_retries_every_second_up_to_limit(self):
+        attempts = {"count": 0}
+
+        def always_rate_limited():
+            attempts["count"] += 1
+            raise YFRateLimitError()
+
+        with patch("tradingagents.dataflows.stockstats_utils.time.sleep") as sleep_mock:
+            with self.assertRaises(YFRateLimitError):
+                yf_retry(always_rate_limited)
+
+        self.assertEqual(attempts["count"], 101)
+        self.assertEqual(sleep_mock.call_count, 100)
+        self.assertEqual(sleep_mock.mock_calls[:3], [call(1.0), call(1.0), call(1.0)])

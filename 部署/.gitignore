@@ -1,3 +1,12 @@
 .env
+.env.*
+!.env.example
+!.env.enterprise.example
+.env.local
+.env.*.local
+.env.bak
+.env.backup
+.env.tmp
+.env.secret
 .venv/
 data/

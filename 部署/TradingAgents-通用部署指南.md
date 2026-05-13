@@ -205,6 +205,12 @@ Copy-Item .env.example .env
 
 然后在 .env 中填写你要用的 API Key。
 
+这里要特别注意：
+
+1. 真正运行时读取的是 .env，不是 .env.example。
+2. .env.example 是模板文件，应该保留空值或示例值，不能直接把真实密钥写进去。
+3. 如果把真实密钥写进 .env.example，就有被 git 跟踪并提交出去的风险。
+
 当前部署目录模板已经默认切到 DeepSeek。如果你就是要用 DeepSeek，只需要补上密钥即可：
 
 ```env
@@ -258,6 +264,22 @@ ALPHA_VANTAGE_API_KEY=你的密钥
 TRADINGAGENTS_CORE_STOCK_VENDOR=alpha_vantage,yfinance
 TRADINGAGENTS_GET_STOCK_DATA_VENDOR=alpha_vantage,yfinance
 ```
+
+如果你希望把 Yahoo 的风险从“只有股价回退”扩大到“新闻、基本面、技术指标也能回退”，可以继续加上：
+
+```env
+TRADINGAGENTS_TECHNICAL_INDICATORS_VENDOR=yfinance,alpha_vantage
+TRADINGAGENTS_FUNDAMENTAL_DATA_VENDOR=yfinance,alpha_vantage
+TRADINGAGENTS_NEWS_DATA_VENDOR=yfinance,alpha_vantage
+TRADINGAGENTS_GET_NEWS_VENDOR=yfinance,alpha_vantage
+TRADINGAGENTS_GET_GLOBAL_NEWS_VENDOR=yfinance,alpha_vantage
+TRADINGAGENTS_GET_INSIDER_TRANSACTIONS_VENDOR=yfinance,alpha_vantage
+```
+
+这样做的业务含义是：
+
+1. 行情、指标、基本面、新闻都仍然优先尝试 Yahoo。
+2. 一旦 Yahoo 限流或失败，系统就更容易切到 Alpha Vantage 接住关键链路。
 
 当前代码在 yfinance 返回限流错误时，也会自动继续尝试你配置的下一个 vendor，而不是直接让整条分析链路失败。
 股票价格回退当前使用的是 Alpha Vantage 免费可用的 TIME_SERIES_DAILY 端点，不再依赖 adjusted daily 的 premium 接口，因此免费 key 也可以承担基础日线 OHLCV 获取。
